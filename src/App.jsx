@@ -35,12 +35,16 @@ const Total = (props) => {
   )
 }
 
-
-
-
-
-
-
+const Part = (props) => {
+  console.log(props)
+  return (
+    <div>
+      <p>
+         {props.name} {props.exercises}
+      </p>
+    </div>
+  )
+}
 
 const App = () => {
   const course = 'Half Stack application development'
