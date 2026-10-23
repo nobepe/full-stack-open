@@ -8,9 +8,18 @@ const Button = (props) => (
 
 // Tilastojen näyttäminen on eriytetty oman komponenti Statistics vastuulle
 const Statistics = (props) => {
+  // Jos palautteita ei ole annettu, näytetään vain teksti "No feedback given"
+  if (props.all === 0) {
+    return (
+      <div>
+        <h1>statistics</h1>
+        <div>No feedback given</div>
+      </div>
+    )
+  }
   return (
     <div>
-      <h2>statistics</h2>
+      <h1>statistics</h1>
       <div> good {props.good} </div>
       <div> neutral {props.neutral} </div>
       <div> bad {props.bad} </div>
