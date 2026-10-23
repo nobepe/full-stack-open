@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 const App = () => {
+  // anekdotteja 8kpl
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -11,12 +12,33 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+
   const [selected, setSelected] = useState(0)
+   
+  // Luodaan 8 nollaa sisältävä taulukko, koska anekdootteja on 8.
+  const [votes, setVotes] = useState(
+  Array(anecdotes.length).fill(0)
+  )  
+
+  // kopioidaan taulukko, lisätään ääni valitulle
+  // anekdootille ja tallennetaan uusi taulukko
+  const vote = () => {
+    const copy = [...votes]
+    // Haetaan valitun anekdootin nykyset äänet
+    const currentVotes = copy[selected]
+    // Lisätään ääniin 1kpl lisää
+    const newVotes = currentVotes + 1
+    // Tallennetaa uusi äänimäärä oikeaan kohtaan kopiossa
+    copy[selected] = newVotes
+    // Päivitetään uudet äänet tilaan
+    setVotes(copy)
+  }
 
   return (
     <div>
       {anecdotes[selected]} <br />
+      <p>has {votes[selected]} votes</p>
+      <button onClick={vote}>vote</button>
       <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>
       next anecdote
       </button>
