@@ -34,14 +34,26 @@ const App = () => {
     setVotes(copy)
   }
 
+  // Haetaan suurin äänimäärä
+  const highestVotes = Math.max(...votes)
+  // Anekdootin indeksi, jolla oli eniten ääniä
+  const mostVotedIndex = votes.indexOf(highestVotes)
+
   return (
     <div>
-      {anecdotes[selected]} <br />
+      <h2>Anecdote of the day</h2>
+      {anecdotes[selected]}
       <p>has {votes[selected]} votes</p>
       <button onClick={vote}>vote</button>
       <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>
       next anecdote
       </button>
+
+      <h2>Anecdote with most votes</h2>
+        <div>
+          <p>{anecdotes[mostVotedIndex]}</p>
+          <p>has {votes[mostVotedIndex]} votes</p>
+        </div>
     </div>
   )
 }
