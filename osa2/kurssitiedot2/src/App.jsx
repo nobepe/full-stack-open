@@ -23,7 +23,8 @@ const Content = (props) => {
 const Total = (props) => {
   console.log(props)
 
-  const totalExercises = props.parts.reduce((sum, part) => sum + part.exercises, 0);
+  const totalExercises = props.parts.reduce(
+    (sum, part) => sum + part.exercises, 0);
   return (
     <div>
       <p>
