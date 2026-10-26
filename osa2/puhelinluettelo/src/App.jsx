@@ -3,19 +3,27 @@ import Name from './components/Name'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { content: 'Arto Hellas', id: '1' }
+    { name: 'Arto Hellas', id: '1' }
   ]) 
   const [newName, setNewName] = useState('')
 
   const addName = (event) => {
+    // preventdef. estää lomakkeen lähetyksen oletusarvoisen toiminnan
     event.preventDefault()
+    // trim poistaa turhat völilyönnit alusta ja lopusta, jotta
+    // "juu" & "  juu" ei olisi eri nimiä
+    const newname = newName.trim()
     const nameObject = {
-      content: newName,
+      name: newname,
       id: String(persons.length + 1),
     }
-
-    setPersons(persons.concat(nameObject))
-    setNewName('')
+    
+    if (persons.some(person => person.name === newname)) {
+      alert(`${newname} is already added to phonebook`)
+    } else {
+      setPersons(persons.concat(nameObject))
+      setNewName('')
+    }
   }
 
   const handleNameChange = (event) => {
@@ -40,7 +48,7 @@ const App = () => {
     <h2>Numbers</h2>
       <div>
           {namesToShow.map(person => (
-            <Name key={person.id} name={person.content} />
+            <Name key={person.id} name={person.name} />
           ))}
       </div>
     </div>
