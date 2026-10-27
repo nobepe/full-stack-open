@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Person from './components/Person'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -53,6 +55,10 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleSearchChange = (event) => {
+  setSearchName(event.target.value)
+ }
+
   // näytettävät nimet, jotka sisältävät hakusanan
   const personToShow = persons.filter(person =>
     person.name.toLowerCase().includes(searchName.toLowerCase())
@@ -61,29 +67,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with:
-        <input
-          value={searchName}
-          onChange={event => setSearchName(event.target.value)}
-        />
-      </div>
+      <Filter searchName={searchName} handleSearchChange={handleSearchChange} />
+
       <h2>Add new</h2>
-      <div>
-      </div>
-      <form onSubmit={addPerson}>
-        name: <input
-                value={newName}
-                onChange={handleNameChange}
-                required //required vaan
-              />
-        <div>number: <input 
-                      value={newNumber}
-                      onChange={handleNumberChange}
-                    /></div>
-        <br />
-        <button type="submit">add</button>
-      </form>
+      <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+
     <h2>Numbers</h2>
       <div>
         {personToShow.map(person => (
