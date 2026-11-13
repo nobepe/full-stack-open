@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Person from './components/Person'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,17 +10,14 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  // hlöiden hakeminen nyt siis palvelun kautta?
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
-  }
-
-  useEffect(hook, [])
+  }, [])
 
   const addPerson = (event) => {
     // preventdef. estää lomakkeen lähetyksen oletusarvoisen toiminnan
@@ -36,9 +33,29 @@ const App = () => {
       return
     }
 
-    // ei voi lisätä nimeä, jos se on jo olemassa
-    if (persons.some(person => person.name === newname)) {
-      alert(`${newname} is already added to phonebook`)
+    // eli nyt toteutetaan osan2 kohtaD tehtävä 2.15
+    // jos jo olemassa olevalle henkilölle lisätään numero,
+    // korvaa lisätty numero aiemman numeron.
+
+    // etsitään onko listalla henkilöä, jolla sama nimi kuin lisättävällä
+    const existingPerson = persons.find(person => person.name === newname)
+
+    // jos on, kysytään käyttäjältä, haluaako hän korvata vanhan numeron uudella
+    if (existingPerson) {
+      if (window.confirm(`${newname} is already added to phonebook, replace the old number with a new one?`)) {
+        // luodaan uusi henkilö-olio, jossa on vanhan henkilön tiedot, mutta uusi numero (siis vaihdetaan vaan hlön puhnro)
+        const changedPerson = { ...existingPerson, number: newnumber }
+
+        personService
+          .update(existingPerson.id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person =>
+              person.id !== existingPerson.id ? person : returnedPerson
+            ))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
       return
     }
 
@@ -48,9 +65,23 @@ const App = () => {
       id: String(persons.length + 1),
     }
 
-    setPersons(persons.concat(nameObject))
-    setNewName('')
-    setNewNumber('')
+    personService
+      .create(nameObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+  }
+
+  const removePerson = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
   }
 
   const handleNameChange = (event) => {
@@ -83,7 +114,11 @@ const App = () => {
     <h2>Numbers</h2>
       <div>
         {personToShow.map(person => (
-          <Person key={person.id} person={person} />
+          <Person
+            key={person.id}
+            person={person}
+            deletePerson={() => removePerson(person.id, person.name)}
+          />
         ))}
       </div>
     </div>
