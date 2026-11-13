@@ -3,12 +3,15 @@ import Person from './components/Person'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // hlöiden hakeminen nyt siis palvelun kautta?
   useEffect(() => {
@@ -18,6 +21,23 @@ const App = () => {
         setPersons(initialPersons)
       })
   }, [])
+
+  // onnistumisviesti
+  const showSuccessMessage = (message) => {
+    setSuccessMessage(message)
+
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+  }
+  // virheviesti
+  const showErrorMessage = (message) => {
+    setErrorMessage(message)
+
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
 
   const addPerson = (event) => {
     // preventdef. estää lomakkeen lähetyksen oletusarvoisen toiminnan
@@ -54,7 +74,18 @@ const App = () => {
             ))
             setNewName('')
             setNewNumber('')
+            showSuccessMessage(`Changed ${returnedPerson.name}'s number`)
           })
+          // käyttäjälle ilmoitetaan operaation epäonnistumisesta
+          .catch(error => {
+            showErrorMessage(
+              `Information of ${existingPerson.name} has already been removed from server`
+            )
+            setPersons(persons.filter(person =>
+              person.id !== existingPerson.id
+            ))
+          })
+
       }
       return
     }
@@ -65,21 +96,32 @@ const App = () => {
       id: String(persons.length + 1),
     }
 
+    // lisätään uusi henkilö palveluun
     personService
       .create(nameObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        showSuccessMessage(`Information of ${returnedPerson.name} has been added to the server`)
+      })
+      .catch(error => {
+        showErrorMessage(`Could not add ${nameObject.name}`)
       })
   }
 
+  // poistetaan henkilö palvelusta
   const removePerson = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
       personService
         .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          showSuccessMessage(`Information of ${name} has been removed from server`)
+        })
+        .catch(error => {
+        // vai pitäskö olla ${name} has already been removed from server?
+        showErrorMessage(`Could not delete ${name}`)
         })
     }
   }
@@ -106,6 +148,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={successMessage} type="success" />
+      <Notification message={errorMessage} type="error" />
+      
       <Filter searchName={searchName} handleSearchChange={handleSearchChange} />
 
       <h2>Add new</h2>
