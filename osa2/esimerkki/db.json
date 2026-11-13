@@ -3,7 +3,7 @@
     {
       "id": "1",
       "content": "HTML is easy",
-      "important": true
+      "important": false
     },
     {
       "id": "2",
@@ -14,6 +14,87 @@
       "id": "3",
       "content": "GET and POST are the most important methods of HTTP protocol",
       "important": true
+    },
+    {
+      "content": "mjojd",
+      "important": true,
+      "id": "qj8SP5NZ1rc"
+    },
+    {
+      "content": "moii",
+      "important": false,
+      "id": "03Zu_pVyv4o"
+    },
+    {
+      "content": "hiechi",
+      "important": true,
+      "id": "MmSHumgLkKk"
+    },
+    {
+      "content": "ljclo",
+      "important": false,
+      "id": "uo0rCEvlAZE"
+    },
+    {
+      "content": "ej",
+      "important": false,
+      "id": "bpmdhJSn3wA"
+    },
+    {
+      "content": "lecl",
+      "important": false,
+      "id": "Ni-iFHzUnNo"
+    },
+    {
+      "content": "d",
+      "important": false,
+      "id": "CHNEN8lQ7J4"
+    },
+    {
+      "content": "ds",
+      "important": false,
+      "id": "iT4BdDmHpTw"
+    },
+    {
+      "content": "ds",
+      "important": false,
+      "id": "uC-IBcer4A8"
+    },
+    {
+      "content": "ew",
+      "important": false,
+      "id": "Lzxh-DvG0IU"
+    },
+    {
+      "content": "fd",
+      "important": false,
+      "id": "A1BnwLM7GrQ"
+    },
+    {
+      "content": "fds",
+      "important": false,
+      "id": "Aj8908VGPFU"
+    },
+    {
+      "content": "we",
+      "important": false,
+      "id": "C_Ly9A_pg4Q"
+    },
+    {
+      "content": "fs",
+      "important": false,
+      "id": "sXTXKtBwdmI"
+    },
+    {
+      "content": "ew",
+      "important": false,
+      "id": "gHQ5OxwrDFM"
+    },
+    {
+      "content": "fsd",
+      "important": false,
+      "id": "mzj-v8tv_8A"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
