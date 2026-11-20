@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
   {
@@ -52,6 +54,9 @@ app.delete('/api/persons/:id', (request, response) => {
 
   // Jos poisto onnistuu eli poistettava muistiinpano on olemassa, vastataan
   // statuskoodilla 204 no content sillä mukaan ei lähetetä mitään dataa
+  // ELI:
+  // palvelin on käsitellyt pyynnön onnistuneesti, mutta se ei palauta
+  // vastauksessa mitään sisältöä
   response.status(204).end()
 })
 
@@ -80,7 +85,7 @@ app.post('/api/persons', (request, response) => {
   // puuttuuko nimi tai nro?
   if (!body.name || !body.number) {
 
-    // tässä nyt 400 statuskoodi, koska virhe
+    // tässä nyt 400 statuskoodi, koska virhe (bad request)
     return response.status(400).json({ 
       error: 'name or number missing' 
     })
@@ -103,7 +108,12 @@ app.post('/api/persons', (request, response) => {
 
   persons = persons.concat(person)
 
-  response.json(person)
+  // statuskoodi 201 created
+  response.status(201).json(person)
+})
+
+morgan.token('body', (request) => {
+    return JSON.stringify(request.body)
 })
 
 const PORT = 3001
