@@ -1,26 +1,16 @@
 {
-  "name": "esimerkki",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "notebackend",
+  "version": "0.0.1",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview",
-    "server": "json-server -p 3001 db.json"
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "Matti Luukkainen",
+  "license": "MIT",
+  "description": "",
   "dependencies": {
-    "axios": "^1.21.0",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
-  },
-  "devDependencies": {
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.1.2",
-    "json-server": "^1.0.0-beta.15",
-    "oxlint": "^1.88.0",
-    "vite": "^8.3.4"
+    "express": "^5.1.0"
   }
 }
