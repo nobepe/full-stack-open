@@ -5,6 +5,7 @@ const cors = require('cors')
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static('dist'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
@@ -77,7 +78,7 @@ app.get('/api/persons/:id', (request, response) => {
 
 const generateId = () => {
   const maxId = 1000000000
-  return Math.floor(Math.random() * maxId)
+  return String(Math.floor(Math.random() * maxId))
 }
 
 

@@ -18,6 +18,7 @@ const App = () => {
     personService
       .getAll()
       .then(initialPersons => {
+        console.log('Backend palautti:', initialPersons)
         setPersons(initialPersons)
       })
   }, [])
@@ -39,7 +40,8 @@ const App = () => {
     }, 5000)
   }
 
-  const addPerson = (event) => {
+  
+const addPerson = (event) => {
     // preventdef. estää lomakkeen lähetyksen oletusarvoisen toiminnan
     event.preventDefault()
     // trim poistaa turhat völilyönnit alusta ja lopusta, jotta
@@ -53,50 +55,14 @@ const App = () => {
       return
     }
 
-    // eli nyt toteutetaan osan2 kohtaD tehtävä 2.15
-    // jos jo olemassa olevalle henkilölle lisätään numero,
-    // korvaa lisätty numero aiemman numeron.
-
-    // etsitään onko listalla henkilöä, jolla sama nimi kuin lisättävällä
-    const existingPerson = persons.find(person => person.name === newname)
-
-    // jos on, kysytään käyttäjältä, haluaako hän korvata vanhan numeron uudella
-    if (existingPerson) {
-      if (window.confirm(`${newname} is already added to phonebook, replace the old number with a new one?`)) {
-        // luodaan uusi henkilö-olio, jossa on vanhan henkilön tiedot, mutta uusi numero (siis vaihdetaan vaan hlön puhnro)
-        const changedPerson = { ...existingPerson, number: newnumber }
-
-        personService
-          .update(existingPerson.id, changedPerson)
-          .then(returnedPerson => {
-            setPersons(persons.map(person =>
-              person.id !== existingPerson.id ? person : returnedPerson
-            ))
-            setNewName('')
-            setNewNumber('')
-            showSuccessMessage(`Changed ${returnedPerson.name}'s number`)
-          })
-          // käyttäjälle ilmoitetaan operaation epäonnistumisesta
-          .catch(error => {
-            showErrorMessage(
-              `Information of ${existingPerson.name} has already been removed from server`
-            )
-            setPersons(persons.filter(person =>
-              person.id !== existingPerson.id
-            ))
-          })
-
-      }
-      return
-    }
-
     const nameObject = {
       name: newname,
       number: newnumber,
-      id: String(persons.length + 1),
     }
 
     // lisätään uusi henkilö palveluun
+    // backend tarkistaa, onko samanniminen henkilö jo olemassa
+    // ja jos nimi on jo käytössä se palauttaa virheilmoituksen
     personService
       .create(nameObject)
       .then(returnedPerson => {
@@ -106,9 +72,12 @@ const App = () => {
         showSuccessMessage(`Information of ${returnedPerson.name} has been added to the server`)
       })
       .catch(error => {
-        showErrorMessage(`Could not add ${nameObject.name}`)
+        showErrorMessage(
+          error.response?.data?.error || `Could not add ${nameObject.name}`
+        )
       })
   }
+
 
   // poistetaan henkilö palvelusta
   const removePerson = (id, name) => {
